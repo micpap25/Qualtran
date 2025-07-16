@@ -16,18 +16,8 @@
 """Contains the main interface for defining `Bloq`s."""
 
 import abc
-from typing import (
-    Callable,
-    Dict,
-    List,
-    Mapping,
-    Optional,
-    Sequence,
-    Set,
-    Tuple,
-    TYPE_CHECKING,
-    Union,
-)
+from collections.abc import Callable, Mapping, Sequence
+from typing import Optional, TYPE_CHECKING, Union
 
 if TYPE_CHECKING:
     import cirq
@@ -162,7 +152,7 @@ class Bloq(metaclass=abc.ABCMeta):
             `qualtran.Signature` for details on how to construct a signature.
         """
 
-    def build_composite_bloq(self, bb: 'BloqBuilder', **soqs: 'SoquetT') -> Dict[str, 'SoquetT']:
+    def build_composite_bloq(self, bb: 'BloqBuilder', **soqs: 'SoquetT') -> dict[str, 'SoquetT']:
         """Override this method to define a bloq as a composition of sub-bloqs.
 
         Bloq authors should override this method. If you already have an instantiated bloq object,
@@ -299,7 +289,7 @@ class Bloq(metaclass=abc.ABCMeta):
 
     def call_classically(
         self, **vals: Union['sympy.Symbol', 'ClassicalValT']
-    ) -> Tuple['ClassicalValT', ...]:
+    ) -> tuple['ClassicalValT', ...]:
         """Call this bloq on classical data.
 
         Bloq users can call this function to apply bloqs to classical data. If you're
@@ -358,8 +348,8 @@ class Bloq(metaclass=abc.ABCMeta):
         return bloq_to_dense(self, superoperator=superoperator)
 
     def my_tensors(
-        self, incoming: Dict[str, 'ConnectionT'], outgoing: Dict[str, 'ConnectionT']
-    ) -> List[Union['qtn.Tensor', 'DiscardInd']]:
+        self, incoming: dict[str, 'ConnectionT'], outgoing: dict[str, 'ConnectionT']
+    ) -> list[Union['qtn.Tensor', 'DiscardInd']]:
         """Override this method to support native quimb simulation of this Bloq.
 
         This method is responsible for returning tensors corresponding to the unitary, state, or
@@ -393,7 +383,7 @@ class Bloq(metaclass=abc.ABCMeta):
 
     def build_call_graph(
         self, ssa: 'SympySymbolAllocator'
-    ) -> Union['BloqCountDictT', Set['BloqCountT']]:
+    ) -> Union['BloqCountDictT', set['BloqCountT']]:
         """Override this method to build the bloq call graph.
 
         This method must return a set of `(bloq, n)` tuples where `bloq` is called `n` times in
@@ -429,7 +419,7 @@ class Bloq(metaclass=abc.ABCMeta):
         generalizer: Optional[Union['GeneralizerT', Sequence['GeneralizerT']]] = None,
         keep: Optional[Callable[['Bloq'], bool]] = None,
         max_depth: Optional[int] = None,
-    ) -> Tuple['nx.DiGraph', Dict['Bloq', Union[int, 'sympy.Expr']]]:
+    ) -> tuple['nx.DiGraph', dict['Bloq', Union[int, 'sympy.Expr']]]:
         """Get the bloq call graph and call totals.
 
         The call graph has edges from a parent bloq to each of the bloqs that it calls in
@@ -458,7 +448,7 @@ class Bloq(metaclass=abc.ABCMeta):
 
     def bloq_counts(
         self, generalizer: Optional[Union['GeneralizerT', Sequence['GeneralizerT']]] = None
-    ) -> Dict['Bloq', Union[int, 'sympy.Expr']]:
+    ) -> dict['Bloq', Union[int, 'sympy.Expr']]:
         """The number of subbloqs directly called by this bloq.
 
         This corresponds to one level of the call graph, see `Bloq.call_graph()`.
@@ -478,7 +468,7 @@ class Bloq(metaclass=abc.ABCMeta):
 
         return dict(get_bloq_callee_counts(self, generalizer=generalizer))
 
-    def get_ctrl_system(self, ctrl_spec: 'CtrlSpec') -> Tuple['Bloq', 'AddControlledT']:
+    def get_ctrl_system(self, ctrl_spec: 'CtrlSpec') -> tuple['Bloq', 'AddControlledT']:
         """Get a controlled version of this bloq and a function to wire it up correctly.
 
         Users should likely call `Bloq.controlled(...)` which uses this method behind-the-scenes.
@@ -499,8 +489,8 @@ class Bloq(metaclass=abc.ABCMeta):
         It must have the following signature:
 
             def _my_add_controlled(
-                bb: 'BloqBuilder', ctrl_soqs: Sequence['SoquetT'], in_soqs: Dict[str, 'SoquetT']
-            ) -> Tuple[Iterable['SoquetT'], Iterable['SoquetT']]:
+                bb: 'BloqBuilder', ctrl_soqs: Sequence['SoquetT'], in_soqs: dict[str, 'SoquetT']
+            ) -> tuple[Iterable['SoquetT'], Iterable['SoquetT']]:
 
         Which takes a bloq builder (for adding the controlled bloq), the new control soquets,
         input soquets for the existing registers; and returns a sequence of the output control
@@ -552,7 +542,7 @@ class Bloq(metaclass=abc.ABCMeta):
 
     def as_cirq_op(
         self, qubit_manager: 'cirq.QubitManager', **cirq_quregs: 'CirqQuregT'
-    ) -> Tuple[Union['cirq.Operation', None], Dict[str, 'CirqQuregT']]:
+    ) -> tuple[Union['cirq.Operation', None], dict[str, 'CirqQuregT']]:
         """Override this method to support conversion to a Cirq operation.
 
         If this method is not overriden, the default implementation will wrap this bloq
@@ -656,7 +646,7 @@ class Bloq(metaclass=abc.ABCMeta):
         return self.on(*merge_qubits(self.signature, **qubit_regs))
 
     def wire_symbol(
-        self, reg: Optional['Register'], idx: Tuple[int, ...] = tuple()
+        self, reg: Optional['Register'], idx: tuple[int, ...] = tuple()
     ) -> 'WireSymbol':
         """On a musical score visualization, use this `WireSymbol` to represent the register.
 

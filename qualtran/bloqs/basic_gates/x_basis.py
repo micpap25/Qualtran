@@ -12,8 +12,9 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
+from collections.abc import Iterable, Sequence
 from functools import cached_property
-from typing import Dict, Iterable, List, Optional, Sequence, Tuple, TYPE_CHECKING, Union
+from typing import Optional, TYPE_CHECKING, Union
 
 import numpy as np
 from attrs import frozen
@@ -81,8 +82,8 @@ class _XVector(Bloq):
         return Signature([Register('q', QBit(), side=Side.RIGHT if self.state else Side.LEFT)])
 
     def my_tensors(
-        self, incoming: Dict[str, 'ConnectionT'], outgoing: Dict[str, 'ConnectionT']
-    ) -> List['qtn.Tensor']:
+        self, incoming: dict[str, 'ConnectionT'], outgoing: dict[str, 'ConnectionT']
+    ) -> list['qtn.Tensor']:
         import quimb.tensor as qtn
 
         side = outgoing if self.state else incoming
@@ -94,7 +95,7 @@ class _XVector(Bloq):
         self,
         qubit_manager: 'cirq.QubitManager',
         **cirq_quregs: 'CirqQuregT',  # type: ignore[type-var]
-    ) -> Tuple[Union['cirq.Operation', None], Dict[str, 'CirqQuregT']]:  # type: ignore[type-var]
+    ) -> tuple[Union['cirq.Operation', None], dict[str, 'CirqQuregT']]:  # type: ignore[type-var]
         if not self.state:
             raise ValueError(f"There is no Cirq equivalent for {self}")
 
@@ -114,7 +115,7 @@ class _XVector(Bloq):
         return f'|{s}>' if self.state else f'<{s}|'
 
     def wire_symbol(
-        self, reg: Optional['Register'], idx: Tuple[int, ...] = tuple()
+        self, reg: Optional['Register'], idx: tuple[int, ...] = tuple()
     ) -> 'WireSymbol':
         if reg is None:
             return Text('')
@@ -224,8 +225,8 @@ class XGate(Bloq):
         return self
 
     def my_tensors(
-        self, incoming: Dict[str, 'ConnectionT'], outgoing: Dict[str, 'ConnectionT']
-    ) -> List['qtn.Tensor']:
+        self, incoming: dict[str, 'ConnectionT'], outgoing: dict[str, 'ConnectionT']
+    ) -> list['qtn.Tensor']:
         import quimb.tensor as qtn
 
         return [
@@ -234,7 +235,7 @@ class XGate(Bloq):
             )
         ]
 
-    def get_ctrl_system(self, ctrl_spec: 'CtrlSpec') -> Tuple['Bloq', 'AddControlledT']:
+    def get_ctrl_system(self, ctrl_spec: 'CtrlSpec') -> tuple['Bloq', 'AddControlledT']:
         from qualtran.bloqs.basic_gates import CNOT, Toffoli
 
         if ctrl_spec == CtrlSpec():
@@ -245,20 +246,20 @@ class XGate(Bloq):
             return super().get_ctrl_system(ctrl_spec)
 
         def add_controlled(
-            bb: 'BloqBuilder', ctrl_soqs: Sequence['SoquetT'], in_soqs: Dict[str, 'SoquetT']
-        ) -> Tuple[Iterable['SoquetT'], Iterable['SoquetT']]:
+            bb: 'BloqBuilder', ctrl_soqs: Sequence['SoquetT'], in_soqs: dict[str, 'SoquetT']
+        ) -> tuple[Iterable['SoquetT'], Iterable['SoquetT']]:
             (ctrl_soq,) = ctrl_soqs
             ctrl_soq, target = bb.add(bloq, ctrl=ctrl_soq, target=in_soqs['q'])
             return (ctrl_soq,), (target,)
 
         return bloq, add_controlled
 
-    def on_classical_vals(self, q: int) -> Dict[str, 'ClassicalValT']:
+    def on_classical_vals(self, q: int) -> dict[str, 'ClassicalValT']:
         return {'q': (q + 1) % 2}
 
     def as_cirq_op(
         self, qubit_manager: 'cirq.QubitManager', **cirq_quregs: 'CirqQuregT'
-    ) -> Tuple['cirq.Operation', Dict[str, 'CirqQuregT']]:
+    ) -> tuple['cirq.Operation', dict[str, 'CirqQuregT']]:
         import cirq
 
         q = cirq_quregs.pop('q')
@@ -271,7 +272,7 @@ class XGate(Bloq):
 
         return qml.PauliX(wires=wires)
 
-    def wire_symbol(self, reg: Register, idx: Tuple[int, ...] = tuple()) -> 'WireSymbol':
+    def wire_symbol(self, reg: Register, idx: tuple[int, ...] = tuple()) -> 'WireSymbol':
         from qualtran.drawing import ModPlus
 
         if reg is None:
@@ -298,7 +299,7 @@ class MeasureX(Bloq):
             [Register('q', QBit(), side=Side.LEFT), Register('c', CBit(), side=Side.RIGHT)]
         )
 
-    def on_classical_vals(self, q: int) -> Dict[str, 'ClassicalValRetT']:
+    def on_classical_vals(self, q: int) -> dict[str, 'ClassicalValRetT']:
         if q not in [0, 1]:
             raise ValueError(f"Invalid classical value encountered in {self}: {q}")
         return {'c': ClassicalValDistribution(2)}
@@ -311,8 +312,8 @@ class MeasureX(Bloq):
         raise ValueError(f"Invalid classical value encountered in {self}: {q}")
 
     def my_tensors(
-        self, incoming: Dict[str, 'ConnectionT'], outgoing: Dict[str, 'ConnectionT']
-    ) -> List['qtn.Tensor']:
+        self, incoming: dict[str, 'ConnectionT'], outgoing: dict[str, 'ConnectionT']
+    ) -> list['qtn.Tensor']:
         import quimb.tensor as qtn
 
         from qualtran.simulation.tensor import DiscardInd

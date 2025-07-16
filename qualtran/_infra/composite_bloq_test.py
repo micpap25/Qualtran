@@ -13,7 +13,7 @@
 #  limitations under the License.
 
 from functools import cached_property
-from typing import Any, cast, Dict
+from typing import Any, cast
 
 import attrs
 import networkx as nx
@@ -82,7 +82,7 @@ class TestTwoCNOT(Bloq):
 
     def build_composite_bloq(
         self, bb: 'BloqBuilder', q1: 'Soquet', q2: 'Soquet'
-    ) -> Dict[str, SoquetT]:
+    ) -> dict[str, SoquetT]:
         q1, q2 = bb.add(CNOT(), ctrl=q1, target=q2)
         q1, q2 = bb.add(CNOT(), ctrl=q2, target=q1)
         return {'q1': q1, 'q2': q2}
@@ -369,7 +369,7 @@ class TestMultiCNOT(Bloq):
         bb: 'BloqBuilder',
         control: 'Soquet',
         target: NDArray['Soquet'],  # type: ignore[type-var]
-    ) -> Dict[str, SoquetT]:
+    ) -> dict[str, SoquetT]:
         for i in range(2):
             for j in range(3):
                 control, target[i, j] = bb.add(CNOT(), ctrl=control, target=target[i, j])
