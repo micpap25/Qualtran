@@ -23,7 +23,6 @@ from typing import (
     Optional,
     overload,
     Protocol,
-    Sequence,
     TYPE_CHECKING,
     TypeAlias,
     TypeGuard,

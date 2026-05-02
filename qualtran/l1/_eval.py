@@ -15,15 +15,7 @@ import importlib
 import logging
 from collections.abc import Mapping, Sequence
 from functools import lru_cache
-from typing import (
-    Any,
-    cast,
-    Optional,
-    Protocol,
-    TYPE_CHECKING,
-    TypeAlias,
-    Union,
-)
+from typing import Any, cast, Optional, Protocol, TYPE_CHECKING, TypeAlias, Union
 
 import attrs
 import numpy as np
