@@ -591,7 +591,7 @@ def cirq_optree_to_cbloq(
     final_soqs_set = set(soq.soquet for soqs in final_soqs_dict.values() for soq in soqs.flatten())
     # 5. Free all dangling Soquets which are not part of the final soquets set.
     for qvar in qreg_to_qvar.values():
-        if qvar.soquet not in final_soqs_set:  # type: ignore[type-var]
+        if qvar.soquet not in final_soqs_set:  # type: ignore[attr-defined]
             bb.free(qvar)
     return bb.finalize(**final_soqs_dict)
 
