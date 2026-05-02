@@ -338,8 +338,8 @@ def _ensure_in_reg_exists(bb: BloqBuilder, in_reg: _QReg, qreg_to_qvar: dict[_QR
 
 def _gather_input_soqs(
     bb: BloqBuilder, op_quregs: dict[str, NDArray[_QReg]], qreg_to_qvar: dict[_QReg, QVar]  # type: ignore[type-var]
-) -> dict[str, NDArray[Soquet]]:
-    qvars_in: dict[str, NDArray[Soquet]] = {}
+) -> dict[str, NDArray[Soquet]]:  # type: ignore[type-var]
+    qvars_in: dict[str, NDArray[Soquet]] = {}  # type: ignore[type-var]
     for reg_name, quregs in op_quregs.items():
         flat_soqs: list[QVar] = []
         for qureg in quregs.flatten():
@@ -591,7 +591,7 @@ def cirq_optree_to_cbloq(
     final_soqs_set = set(soq.soquet for soqs in final_soqs_dict.values() for soq in soqs.flatten())
     # 5. Free all dangling Soquets which are not part of the final soquets set.
     for qvar in qreg_to_qvar.values():
-        if qvar.soquet not in final_soqs_set:
+        if qvar.soquet not in final_soqs_set:  # type: ignore[type-var]
             bb.free(qvar)
     return bb.finalize(**final_soqs_dict)
 
