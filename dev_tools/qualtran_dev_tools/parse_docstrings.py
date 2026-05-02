@@ -59,7 +59,7 @@ def parse_reference(ref_text: str) -> ReferenceT:
     return UnparsedReference(ref_text)
 
 
-def parse_references(full_reference_text: str) -> List[ReferenceT]:
+def parse_references(full_reference_text: str) -> list[ReferenceT]:
     reference_texts = re.split(r'\n\n', full_reference_text)
     my_refs = []
     for ref_text in reference_texts:

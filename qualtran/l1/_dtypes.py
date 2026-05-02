@@ -13,7 +13,7 @@
 #  limitations under the License.
 
 from functools import lru_cache
-from typing import cast, Dict, Tuple, Type
+from typing import cast, Type
 
 import qualtran as qlt
 import qualtran.dtype as qdt
@@ -22,7 +22,7 @@ from .nodes import CArgNode, CObjectNode, LiteralNode, QDTypeNode
 
 
 @lru_cache
-def get_builtin_qdtype_mapping() -> Dict[str, Type['qdt.QCDType']]:
+def get_builtin_qdtype_mapping() -> dict[str, Type['qdt.QCDType']]:
     """Datatypes that are available without namespacing and with `safe=True`."""
     from qualtran.dtype import BQUInt, CBit, QAny, QBit, QFxp, QInt, QMontgomeryUInt, QUInt
 
@@ -33,7 +33,7 @@ def get_builtin_qdtype_mapping() -> Dict[str, Type['qdt.QCDType']]:
 
 
 @lru_cache
-def get_builtin_qdtypes() -> Tuple[Type['qdt.QCDType'], ...]:
+def get_builtin_qdtypes() -> tuple[Type['qdt.QCDType'], ...]:
     return tuple(get_builtin_qdtype_mapping().values())
 
 

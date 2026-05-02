@@ -12,7 +12,6 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 import inspect
-from typing import Dict
 
 import pytest
 
@@ -42,7 +41,7 @@ def test_inspect():
 
 
 @qlt.bloqify
-def minimal_bloq(bb: 'BloqBuilder', x: 'QVar') -> Dict[str, 'QVar']:
+def minimal_bloq(bb: 'BloqBuilder', x: 'QVar') -> dict[str, 'QVar']:
     return {'x': x}
 
 
@@ -60,7 +59,7 @@ def test_bloqify_make():
 
 def test_bloqify_call():
     @qlt.bloqify
-    def outer_program(bb: 'BloqBuilder', x: 'QVar') -> Dict[str, 'QVar']:
+    def outer_program(bb: 'BloqBuilder', x: 'QVar') -> dict[str, 'QVar']:
         x = minimal_bloq(bb, x=x)
         return {'x': x}
 
@@ -71,7 +70,7 @@ def test_bloqify_call():
 
 def test_bloqify_inline():
     @qlt.bloqify
-    def outer_program(bb: 'BloqBuilder', x: 'QVar') -> Dict[str, 'QVar']:
+    def outer_program(bb: 'BloqBuilder', x: 'QVar') -> dict[str, 'QVar']:
         x_out = minimal_bloq.inline(bb, x=x)
         return {'x': x_out[0]}
 
@@ -92,7 +91,7 @@ def test_bloqify_non_dict_return():
         return x  # Not a dict
 
     @qlt.bloqify
-    def outer_program(bb: 'BloqBuilder', x: 'QVar') -> Dict[str, 'QVar']:
+    def outer_program(bb: 'BloqBuilder', x: 'QVar') -> dict[str, 'QVar']:
         x = bad_bloq(bb, x=x)
         return {'x': x}
 

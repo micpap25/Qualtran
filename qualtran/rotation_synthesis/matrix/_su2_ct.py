@@ -14,7 +14,8 @@
 
 import functools
 import itertools
-from typing import cast, Mapping, Optional, Sequence, Union
+from collections.abc import Mapping, Sequence
+from typing import cast, Optional, Union
 
 import attrs
 import numpy as np

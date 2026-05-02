@@ -164,7 +164,7 @@ class MultiControlPauli(MultiControlPauliBase):
         [Constructing Large Controlled Nots](https://algassert.com/circuits/2015/06/05/Constructing-Large-Controlled-Nots.html)
     """
 
-    cvs: Union[HasLength, Tuple[int, ...]] = field(converter=_to_tuple_or_has_length)
+    cvs: Union[HasLength, tuple[int, ...]] = field(converter=_to_tuple_or_has_length)
     target_bloq: Bloq
 
     def __attrs_post_init__(self):
@@ -194,7 +194,7 @@ class MultiControlX(MultiControlPauliBase):
         target: single qubit target register.
     """
 
-    cvs: Union[HasLength, Tuple[int, ...]] = field(converter=_to_tuple_or_has_length)
+    cvs: Union[HasLength, tuple[int, ...]] = field(converter=_to_tuple_or_has_length)
 
     @cached_property
     def target_bloq(self) -> 'Bloq':
@@ -241,7 +241,7 @@ class MultiControlZ(MultiControlPauliBase):
         target: single qubit target register.
     """
 
-    cvs: Union[HasLength, Tuple[int, ...]] = field(converter=_to_tuple_or_has_length)
+    cvs: Union[HasLength, tuple[int, ...]] = field(converter=_to_tuple_or_has_length)
 
     @cached_property
     def target_bloq(self) -> 'Bloq':
